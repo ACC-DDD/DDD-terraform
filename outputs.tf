@@ -22,6 +22,10 @@ output "s3_bucket_name" {
   value = module.s3.s3_bucket_name
 }
 
+output "s3_bucket_website_endpoint" {
+  value = module.s3.s3_bucket_website_endpoint
+}
+
 output "cloudfront_domain_name" {
   value = module.cloudfront.cloudfront_domain_name
 }

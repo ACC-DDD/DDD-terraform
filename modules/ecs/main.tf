@@ -1,6 +1,6 @@
 # Security group for ECS tasks
 resource "aws_security_group" "ecs_tasks" {
-  name        = "${var.name}-ecs-sg"
+  name        = "${substr(var.name,0,20)}-ecs-sg"
   description = "Allow ALB -> ECS and internal VPC"
   vpc_id      = var.vpc_id
 

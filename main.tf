@@ -67,12 +67,12 @@ module "apigw" {
 }
 
 module "s3" {
-  source      = "./modules/s3"
-  bucket_name = "${var.name}-frontend-bucket"
+  source         = "./modules/s3"
+  s3_bucket_name = "${var.name}-frontend-bucket"
 }
 
 module "cloudfront" {
-  source               = "./modules/cloudfront"
-  s3_bucket_name       = module.s3.s3_bucket_name
-  api_gateway_endpoint = module.apigw.api_gateway_endpoint
+  source                     = "./modules/cloudfront"
+  s3_bucket_website_endpoint = module.s3.s3_bucket_website_endpoint
+  api_gateway_endpoint       = module.apigw.api_gateway_endpoint
 }

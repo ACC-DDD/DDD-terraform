@@ -3,7 +3,7 @@ resource "aws_cloudfront_distribution" "this" {
   default_root_object = "index.html"
 
   origin {
-    domain_name = "s3-website-${var.s3_bucket_name}.s3-website-ap-northeast-2.amazonaws.com"
+    domain_name = var.s3_bucket_website_endpoint
     origin_id   = "s3-frontend"
   }
 
@@ -50,8 +50,4 @@ resource "aws_cloudfront_distribution" "this" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
-}
-
-output "cloudfront_domain_name" {
-  value = aws_cloudfront_distribution.this.domain_name
 }

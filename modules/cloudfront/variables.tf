@@ -1,4 +1,4 @@
-variable "s3_bucket_name" {
+variable "s3_bucket_website_endpoint" {
   type = string
 }
 
