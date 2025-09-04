@@ -15,7 +15,7 @@ output "prometheus_exporter_service_name" {
 }
 
 output "api_gateway_endpoint" {
-  value = module.apigateway.api_endpoint
+  value = module.apigw.api_gateway_endpoint
 }
 
 output "s3_bucket_name" {

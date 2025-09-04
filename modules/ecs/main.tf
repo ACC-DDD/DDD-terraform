@@ -117,16 +117,41 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 # ECS Service
-resource "aws_ecs_service" "this" {
-  name            = "${var.name}-service"
+# resource "aws_ecs_service" "this" {
+#   name            = "${var.name}-service"
+#   cluster         = aws_ecs_cluster.this.id
+#   task_definition = aws_ecs_task_definition.this.arn
+#   desired_count   = var.desired_count
+#   launch_type     = "FARGATE"
+
+#   network_configuration {
+#     subnets          = var.private_subnet_ids
+#     security_groups  = [aws_security_group.ecs_tasks.id]
+#     assign_public_ip = false
+#   }
+
+#   load_balancer {
+#     target_group_arn = var.target_group_arn
+#     container_name   = "spring-backend"
+#     container_port   = var.container_port
+#   }
+
+#   lifecycle {
+#     ignore_changes = [task_definition] # allow task def updates without recreate service
+#   }
+
+#   depends_on = []
+# }
+
+resource "aws_ecs_service" "spring_backend" {
+  name            = "${var.name}-spring-backend"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.this.arn
   desired_count   = var.desired_count
   launch_type     = "FARGATE"
-
   network_configuration {
     subnets          = var.private_subnet_ids
-    security_groups  = [aws_security_group.ecs_tasks.id]
+    security_groups  = [var.alb_sg_id]
     assign_public_ip = false
   }
 
@@ -137,11 +162,23 @@ resource "aws_ecs_service" "this" {
   }
 
   lifecycle {
-    ignore_changes = [task_definition] # allow task def updates without recreate service
+    ignore_changes = [task_definition]
   }
-
-  depends_on = []
 }
+
+resource "aws_ecs_service" "prometheus_exporter" {
+  name            = "${var.name}-prometheus-exporter"
+  cluster         = aws_ecs_cluster.this.id
+  task_definition = aws_ecs_task_definition.this.arn
+  desired_count   = var.desired_count
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [var.alb_sg_id]
+    assign_public_ip = false
+  }
+}
+
 
 # CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "this" {

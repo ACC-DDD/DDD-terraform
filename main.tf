@@ -63,7 +63,7 @@ module "ecs" {
 module "apigw" {
   source       = "./modules/apigw"
   name         = var.name
-  alb_dns_name = module.alb.this_dns_name
+  alb_dns_name = module.alb.alb_dns_name
 }
 
 module "s3" {
@@ -72,7 +72,7 @@ module "s3" {
 }
 
 module "cloudfront" {
-  source              = "./modules/cloudfront"
-  s3_bucket_name      = module.s3.s3_bucket_name
+  source               = "./modules/cloudfront"
+  s3_bucket_name       = module.s3.s3_bucket_name
   api_gateway_endpoint = module.apigw.api_gateway_endpoint
 }

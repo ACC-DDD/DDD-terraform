@@ -3,12 +3,12 @@ resource "aws_cloudfront_distribution" "this" {
   default_root_object = "index.html"
 
   origin {
-    domain_name = module.s3.s3_bucket_name.s3-website-ap-northeast-2.amazonaws.com
+    domain_name = "s3-website-${var.s3_bucket_name}.s3-website-ap-northeast-2.amazonaws.com"
     origin_id   = "s3-frontend"
   }
 
   origin {
-    domain_name = module.apigw.api_gateway_endpoint
+    domain_name = var.api_gateway_endpoint
     origin_id   = "api-gateway"
   }
 
@@ -17,6 +17,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+
     forwarded_values {
       query_string = false
       cookies {
@@ -31,6 +32,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
     cached_methods         = ["GET", "HEAD"]
+
     forwarded_values {
       query_string = true
       cookies {

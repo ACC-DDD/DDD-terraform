@@ -1,12 +1,24 @@
 resource "aws_s3_bucket" "frontend" {
   bucket = var.bucket_name
-  acl    = "public-read"
+}
 
-  website {
-    index_document = "index.html"
-    error_document = "index.html"
+resource "aws_s3_bucket_acl" "frontend_acl" {
+  bucket = aws_s3_bucket.frontend.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "frontend_website" {
+  bucket = aws_s3_bucket.frontend.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"
   }
 }
+
 
 resource "aws_s3_bucket_policy" "frontend_policy" {
   bucket = aws_s3_bucket.frontend.id
@@ -14,10 +26,10 @@ resource "aws_s3_bucket_policy" "frontend_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
+        Effect    = "Allow",
         Principal = "*",
-        Action = "s3:GetObject",
-        Resource = "${aws_s3_bucket.frontend.arn}/*"
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.frontend.arn}/*"
       }
     ]
   })
