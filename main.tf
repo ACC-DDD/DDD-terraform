@@ -17,7 +17,6 @@ provider "aws" {
 module "vpc" {
   source = "./modules/vpc"
 
-
   name                 = var.name
   cidr_block           = var.vpc_cidr
   azs                  = var.azs
@@ -31,7 +30,6 @@ module "vpc" {
 module "alb" {
   source = "./modules/alb"
 
-
   name                  = var.name
   vpc_id                = module.vpc.vpc_id
   public_subnet_ids     = module.vpc.public_subnet_ids
@@ -44,7 +42,6 @@ module "alb" {
 # ECS (Fargate) 
 module "ecs" {
   source = "./modules/ecs"
-
 
   name                      = var.name
   cluster_name              = "${var.name}-cluster"
@@ -63,38 +60,19 @@ module "ecs" {
 }
 
 # APIGW
-module "apigateway" {
-  source       = "./modules/apigateway"
+module "apigw" {
+  source       = "./modules/apigw"
   name         = var.name
   alb_dns_name = module.alb.this_dns_name
 }
 
-module "cloudfront" {
-  source  = "terraform-aws-modules/cloudfront/aws//examples/complete"
-  version = "5.0.0"
-
-  enabled = true
-
-  origins = [
-    {
-      domain_name = module.apigateway.api_endpoint
-      origin_id   = "api-gateway-origin"
-      custom_origin_config = {
-        origin_protocol_policy = "https-only"
-      }
-    }
-  ]
-
-  default_cache_behavior = {
-    target_origin_id       = "api-gateway-origin"
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-  }
-
-  viewer_certificate = {
-    cloudfront_default_certificate = true
-  }
+module "s3" {
+  source      = "./modules/s3"
+  bucket_name = "${var.name}-frontend-bucket"
 }
 
+module "cloudfront" {
+  source              = "./modules/cloudfront"
+  s3_bucket_name      = module.s3.s3_bucket_name
+  api_gateway_endpoint = module.apigw.api_gateway_endpoint
+}

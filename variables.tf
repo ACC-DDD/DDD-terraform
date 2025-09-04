@@ -42,11 +42,6 @@ variable "alb_allowed_ingress_cidrs" {
 #   default = false
 # }
 
-variable "certificate_arn" {
-  type    = string
-  default = ""
-}
-
 variable "health_check_path" {
   type    = string
   default = "/health"
@@ -77,24 +72,24 @@ variable "prometheus_exporter_image" {
   default = "prom/prometheus:latest"
 }
 
-variable "create_ecr" {
-  description = "Whether to create ECR repositories"
-  type        = bool
-  default     = false
-}
+# variable "create_ecr" {
+#   description = "Whether to create ECR repositories"
+#   type        = bool
+#   default     = false
+# }
 
-variable "ecr_repositories" {
-  description = "List of ECR repository names to create when create_ecr=true"
-  type        = list(string)
-  default     = ["spring-backend", "prometheus-exporter"]
-}
+# variable "ecr_repositories" {
+#   description = "List of ECR repository names to create when create_ecr=true"
+#   type        = list(string)
+#   default     = ["spring-backend", "prometheus-exporter"]
+# }
 
-variable "cloudfront_enabled" {
-  type    = bool
-  default = true
-}
+# variable "cloudfront_enabled" {
+#   type    = bool
+#   default = true
+# }
 
-variable "cloudfront_default_certificate" {
-  type    = bool
-  default = true
-}
+# variable "cloudfront_default_certificate" {
+#   type    = bool
+#   default = true
+# }
