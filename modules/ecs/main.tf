@@ -1,6 +1,6 @@
 # Security group for ECS tasks
 resource "aws_security_group" "ecs_tasks" {
-  name        = "${substr(var.name,0,20)}-ecs-sg"
+  name        = "${substr(var.name, 0, 20)}-ecs-sg"
   description = "ECS tasks sg"
   vpc_id      = var.vpc_id
 

@@ -2,44 +2,25 @@ resource "aws_s3_bucket" "frontend" {
   bucket = "${var.s3_bucket_name}-frontend-bucket"
 }
 
-resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = "OAI for frontend bucket"
-}
-
-# resource "aws_s3_bucket_website_configuration" "frontend_website" {
-#   bucket = aws_s3_bucket.frontend.id
-
-#   index_document {
-#     suffix = "index.html"
-#   }
-
-#   error_document {
-#     key = "index.html"
-#   }
-# }
-
-resource "aws_s3_bucket_website_configuration" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
-  index_document {
-    suffix = "index.html"
-  }
-  error_document {
-    key = "index.html"
-  }
-}
-
 resource "aws_s3_bucket_policy" "frontend_policy" {
   bucket = aws_s3_bucket.frontend.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
+        Sid    = "AllowCloudFrontAccess"
         Effect = "Allow"
         Principal = {
-          AWS = aws_cloudfront_origin_access_identity.this.iam_arn
+          Service = "cloudfront.amazonaws.com"
         }
-        Action = "s3:GetObject"
+        Action   = "s3:GetObject"
         Resource = "${aws_s3_bucket.frontend.arn}/*"
+        Condition = {
+          StringEquals = {
+            # "AWS:SourceArn" = module.cloudfront.cloudfront_distribution_arn
+            "AWS:SourceArn" = var.cloudfront_distribution_arn
+          }
+        }
       }
     ]
   })

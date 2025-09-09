@@ -19,13 +19,19 @@ output "api_gateway_endpoint" {
 }
 
 output "s3_bucket_name" {
-  value = module.s3.s3_bucket_name
+  value = module.s3.bucket_name
 }
 
-output "s3_bucket_website_endpoint" {
-  value = module.s3.s3_bucket_website_endpoint
+output "s3_bucket_arn" {
+  description = "Frontend S3 bucket ARN"
+  value       = module.s3.bucket_arn
 }
 
 output "cloudfront_domain_name" {
   value = module.cloudfront.cloudfront_domain_name
+}
+
+output "cloudfront_distribution_id" {
+  description = "CloudFront distribution ID"
+  value       = module.cloudfront.cloudfront_distribution_id
 }
