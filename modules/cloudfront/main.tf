@@ -11,7 +11,6 @@ resource "aws_cloudfront_distribution" "this" {
 
   # S3 frontend
   origin {
-    # domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
     domain_name              = var.s3_bucket_regional_domain_name
     origin_id                = "s3-origin"
     origin_access_control_id = aws_cloudfront_origin_access_control.frontend_oac.id

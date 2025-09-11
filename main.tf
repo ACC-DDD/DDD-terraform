@@ -67,8 +67,8 @@ module "apigw" {
 }
 
 module "s3" {
-  source                   = "./modules/s3"
-  s3_bucket_name           = var.s3_bucket_name
+  source                      = "./modules/s3"
+  s3_bucket_name              = var.s3_bucket_name
   cloudfront_distribution_arn = module.cloudfront.cloudfront_distribution_arn
 }
 
@@ -77,7 +77,5 @@ module "cloudfront" {
   s3_bucket_name                 = module.s3.bucket_name
   s3_bucket_arn                  = module.s3.bucket_arn
   s3_bucket_regional_domain_name = module.s3.bucket_regional_domain_name
-  # api_gateway_endpoint       = module.apigw.api_gateway_endpoint
-  api_gateway_endpoint = replace(module.apigw.api_gateway_endpoint, "https://", "")
-
+  api_gateway_endpoint           = replace(replace(module.apigw.api_gateway_endpoint, "https://", ""), "/default", "")
 }

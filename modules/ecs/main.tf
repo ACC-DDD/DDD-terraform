@@ -4,12 +4,22 @@ resource "aws_security_group" "ecs_tasks" {
   description = "ECS tasks sg"
   vpc_id      = var.vpc_id
 
+
   # ALB to app port
   ingress {
     from_port       = var.container_port
     to_port         = var.container_port
     protocol        = "tcp"
     security_groups = [var.alb_sg_id]
+  }
+
+  # Redis(ElastiCache) 접근 허용 - VPC 전체에서 접근 가능
+  ingress {
+    from_port   = 6379
+    to_port     = 6379
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+    description = "Allow Redis access from VPC"
   }
 
   # (Optional) VPC access to Prometheus UI/metrics (9090) — restricted to VPC CIDR
